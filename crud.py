@@ -15,15 +15,16 @@ class User(db.Model):
     username = db.Column(db.String(80), unique=True)
     email = db.Column(db.String(120), unique=True)
 
-    def __init__(self, username, email):
+    def __init__(self, username, email, fname):
         self.username = username
         self.email = email
+        self.fname = fname
 
 
 class UserSchema(ma.Schema):
     class Meta:
         # Fields to expose
-        fields = ('username', 'email')
+        fields = ('username', 'email', 'fname')
 
 
 user_schema = UserSchema()
@@ -35,8 +36,9 @@ users_schema = UserSchema(many=True)
 def add_user():
     username = request.json['username']
     email = request.json['email']
+    fname = request.json['fname']
     
-    new_user = User(username, email)
+    new_user = User(username, email, fname)
 
     db.session.add(new_user)
     db.session.commit()
@@ -60,14 +62,16 @@ def user_detail(id):
 
 
 # endpoint to update user
-@app.route("/user/<id>", methods=["PUT"]) #???? put
+@app.route("/user/<id>", methods=["PUT"])
 def user_update(id):
     user = User.query.get(id)
     username = request.json['username']
     email = request.json['email']
+    fname = request.json['fname']
 
     user.email = email
     user.username = username
+    user.fname = fname
 
     db.session.commit()
     return user_schema.jsonify(user)
