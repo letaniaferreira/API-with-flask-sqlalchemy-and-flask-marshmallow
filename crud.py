@@ -24,7 +24,7 @@ class User(db.Model):
 class UserSchema(ma.Schema):
     class Meta:
         # Fields to expose
-        fields = ('username', 'email', 'fname')
+        fields = ('id', 'username', 'email', 'fname')
 
 
 user_schema = UserSchema()
@@ -51,7 +51,7 @@ def add_user():
 def get_user():
     all_users = User.query.all()
     result = users_schema.dump(all_users)
-    return jsonify(result.data)
+    return jsonify(result)
 
 
 # endpoint to get user detail by id
@@ -88,4 +88,6 @@ def user_delete(id):
 
 
 if __name__ == '__main__':
+    with app.app_context():
+        db.create_all()
     app.run(debug=True)
