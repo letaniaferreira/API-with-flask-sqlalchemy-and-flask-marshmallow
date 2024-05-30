@@ -50,8 +50,7 @@ def add_user():
 @app.route("/user", methods=["GET"])
 def get_user():
     all_users = User.query.all()
-    result = users_schema.dump(all_users)
-    return jsonify(result)
+    users_schema.dump(all_users)
 
 
 # endpoint to get user detail by id
@@ -66,10 +65,8 @@ def user_detail(id):
 def user_update(id):
     user = User.query.get(id)
     username = request.json['username']
-    email = request.json['email']
     fname = request.json['fname']
 
-    user.email = email
     user.username = username
     user.fname = fname
 
